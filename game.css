@@ -33,6 +33,10 @@ body.paused {
     animation-play-state: paused;
 }
 
+body.paused .ground {
+    animation-play-state: paused !important;
+}
+
 #pause {
     margin-top: 15px;
     padding: 10px 25px;
@@ -124,6 +128,33 @@ body.paused {
 
     100% {
         bottom: 20px;
+    }
+}
+
+#jumpBtn{
+    display: none;
+    margin: 15px auto;
+    padding: 15px 55px;
+    background-color: #8cff35;
+    color: #142b13;
+    border: none;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 0 12px rgba(140,255,53,0.5);
+    touch-action: manipulation;
+}
+
+#jumpBtn:active{
+    transform: scale(0.94);
+}
+
+/* ON MOBILE ONLY */
+
+@media(max-width:768px){
+    #jumpBtn{
+        display: block;
     }
 }
 
