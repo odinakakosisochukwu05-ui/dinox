@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="game.css">
+</head>
+
+<body>
+    <div class="game-container">
+        <h2>DINOX</h2>
+
+        <div class="game-area">
+            <div id="dino">🦖</div>
+            <div class="ground"></div>
+        </div>
+
+     <div class="score">
+    <p>Time: <span id="score">0</span>s</p>
+     <p>Cacti: <span id="cactusScore">0</span></p>
+    <p>High Score: <span id="highScore">0</span></p>
+</div>
+        <p id="message">press SPACE or tap to jump!</p>
+        <button id="pause">Pause</button>
+        <button id="restart" hidden>Play Again</button>
+    </div>
+
+<audio id="jumpSound" src="jumpsound.wav"></audio>
+<audio id="levelUpSound" src="levelupsound.wav"></audio>
+<audio id="gameOverSound" src="gameoversound.wav"></audio>
+<audio id="backgroundSound" src="backgroundsound.mp3" loop></audio>
+<audio id="buttonClickSound" src="buttonclicksound.wav"></audio>
+    <script src="game.js"></script>
+</body>
+
+</html>
