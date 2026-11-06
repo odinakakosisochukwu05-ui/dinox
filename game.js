@@ -10,6 +10,7 @@ const buttonClickSound = document.getElementById('buttonClickSound');
 const highScoreDisplay = document.getElementById('highScore');
 const cactusScoreDisplay = document.getElementById('cactusScore');
 const pauseBtn = document.getElementById('pause');
+const jumpBtn = document.getElementById('jumpBtn');
 
 let score = 0;
 let cactusScore = 0;
@@ -26,16 +27,15 @@ let startTime = 0;
 let timerInterval;
 let cactusSpeed = 5;
 
-const initialSpeed = 5;
-const maximumSpeed = 20;
+const initialSpeed = 10;
+const maximumSpeed = 30;
 
 highScoreDisplay.textContent = highScore;;
 
 // DINO JUMP
 
 function jump() {
-
-    if (!gameRunning || dino.classList.contains('jump')) {
+if (!gameRunning || isPaused || dino.classList.contains('jump')) {
         return;
     }
     jumpSound.currentTime = 0;
@@ -49,28 +49,20 @@ function jump() {
 }
 
 
-// KEYBOARD CONTROLS
+// PC KEYBOARD CONTROLS
 
-document.addEventListener('keydown', function (event) {
+document.addEventListener('keydown', function(event) {
 
-    if (event.code === 'Space' || event.code === 'ArrowUp') {
+    if (event.code === 'Space') {
 
         event.preventDefault();
 
-        // Restart when game is over
         if (!gameRunning) {
-
-            if (event.code === 'Space') {
-                restartGame();
-            }
-
+            restartGame();
             return;
-
         }
 
-        // Otherwise, jump
         jump();
-
     }
 
 });
@@ -87,6 +79,12 @@ gameArea.addEventListener('click', function (event) {
     jump();
 
 });
+
+// MOBILE JUMPBTN
+
+jumpBtn.addEventListener('click',function(){
+    jump();
+})
 
 
 // CREATE CACTUS
@@ -267,7 +265,7 @@ function gameLoop(timestamp) {
 }
 
     // CREATE OBSTACLES
-    if (timestamp - lastSpawn > 1200) {
+    if (timestamp - lastSpawn > 800) {
         createObstacle();
         lastSpawn = timestamp;
     }
