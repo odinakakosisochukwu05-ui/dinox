@@ -195,3 +195,92 @@ body.paused .ground {
 #restart:hover {
     background-color: #555;
 }
+
+/* GAME CONTROLS */
+
+.game-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+/* JUMP BUTTON */
+
+#jumpBtn {
+    display: none;
+    width: 150px;
+    padding: 15px;
+
+    background: #8cff35;
+    color: #142b13;
+
+    border: none;
+    border-radius: 10px;
+
+    font-size: 18px;
+    font-weight: bold;
+
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+/* SHOW WHEN JAVASCRIPT REMOVES HIDDEN */
+
+#jumpBtn:not([hidden]) {
+    display: block;
+}
+
+/* ALWAYS RESPECT HIDDEN ATTRIBUTE */
+
+#jumpBtn[hidden] {
+    display: none !important;
+}
+
+#jumpBtn:active {
+    transform: scale(0.95);
+}
+
+/* MOBILE ONLY */
+
+@media (min-width: 769px) {
+    #jumpBtn {
+        display: none !important;
+    }
+}
+
+/* SPEED SETTINGS */
+
+.speed-settings {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin: 20px auto;
+}
+
+.speed-settings label {
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 3px;
+    text-shadow: 0 0 5px black;
+}
+
+#speedSelect {
+    padding: 10px 25px;
+    background: #142b13;
+    color: #8cff35;
+    border: 2px solid #8cff35;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    outline: none;
+}
+
+#speedSelect option {
+    background: #142b13;
+    color: white;
+}
