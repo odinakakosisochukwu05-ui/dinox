@@ -11,6 +11,7 @@ const highScoreDisplay = document.getElementById('highScore');
 const cactusScoreDisplay = document.getElementById('cactusScore');
 const pauseBtn = document.getElementById('pause');
 const jumpBtn = document.getElementById('jumpBtn');
+const speedSelect = document.getElementById('speedSelect');
 
 let score = 0;
 let cactusScore = 0;
@@ -26,16 +27,49 @@ let animationId;
 let startTime = 0;
 let timerInterval;
 let cactusSpeed = 5;
-
-const initialSpeed = 10;
-const maximumSpeed = 30;
+let initialSpeed = 5;
+let maximumSpeed = 20;
 
 highScoreDisplay.textContent = highScore;;
+
+// GAME SPEED SETTINGS
+
+const speedModes = {
+
+    slow: {
+        initial: 3,
+        maximum: 20
+    },
+
+    normal: {
+        initial: 7,
+        maximum: 30
+    },
+
+    fast: {
+        initial: 10,
+        maximum: 50
+    }
+
+};
+
+// CHANGE GAME SPEED
+
+speedSelect.addEventListener('change', function() {
+
+    const selectedSpeed = speedSelect.value;
+
+    initialSpeed = speedModes[selectedSpeed].initial;
+    maximumSpeed = speedModes[selectedSpeed].maximum;
+
+    cactusSpeed = initialSpeed;
+
+});
 
 // DINO JUMP
 
 function jump() {
-if (!gameRunning || isPaused || dino.classList.contains('jump')) {
+    if (!gameRunning || isPaused || dino.classList.contains('jump')) {
         return;
     }
     jumpSound.currentTime = 0;
@@ -51,7 +85,7 @@ if (!gameRunning || isPaused || dino.classList.contains('jump')) {
 
 // PC KEYBOARD CONTROLS
 
-document.addEventListener('keydown', function(event) {
+document.addEventListener('keydown', function (event) {
 
     if (event.code === 'Space') {
 
@@ -80,12 +114,19 @@ gameArea.addEventListener('click', function (event) {
 
 });
 
-// MOBILE JUMPBTN
+// MOBILE JUMP BUTTON
 
-jumpBtn.addEventListener('click',function(){
+jumpBtn.addEventListener('pointerdown', function (event) {
+
+    event.preventDefault();
+
+    if (!gameRunning || isPaused) {
+        return;
+    }
+
     jump();
-})
 
+});
 
 // CREATE CACTUS
 
@@ -122,7 +163,9 @@ function gameOver() {
 
     restartBtn.hidden = false;
     pauseBtn.disabled = true;
-document.body.classList.add('paused');
+    document.body.classList.add('paused');
+
+    updateJumpButton();
 
 }
 
@@ -136,7 +179,7 @@ function startTimer(reset = true) {
 
     clearInterval(timerInterval);
 
-    timerInterval = setInterval(function() {
+    timerInterval = setInterval(function () {
 
         if (!gameRunning || isPaused) {
             return;
@@ -206,6 +249,18 @@ function updateCactusSpeed() {
 
 }
 
+// CONTROL JUMP BUTTON VISIBILITY
+
+function updateJumpButton() {
+
+    if (gameRunning && !isPaused) {
+        jumpBtn.hidden = false;
+    } else {
+        jumpBtn.hidden = true;
+    }
+
+}
+
 // PAUSE GAME
 
 function pauseGame() {
@@ -227,6 +282,7 @@ function pauseGame() {
     document.body.classList.add('paused');
 
     pauseBtn.textContent = 'Play';
+    updateJumpButton();
 
 }
 
@@ -253,6 +309,7 @@ function resumeGame() {
     pauseBtn.textContent = 'Pause';
 
     animationId = requestAnimationFrame(gameLoop);
+    updateJumpButton();
 
 }
 
@@ -260,12 +317,12 @@ function resumeGame() {
 
 function gameLoop(timestamp) {
 
-   if (!gameRunning || isPaused) {
-    return;
-}
+    if (!gameRunning || isPaused) {
+        return;
+    }
 
     // CREATE OBSTACLES
-    if (timestamp - lastSpawn > 800) {
+    if (timestamp - lastSpawn > 1000) {
         createObstacle();
         lastSpawn = timestamp;
     }
@@ -316,7 +373,7 @@ function gameLoop(timestamp) {
 
     animationId = requestAnimationFrame(gameLoop);
 
-} 
+}
 
 
 // RESTART GAME
@@ -337,7 +394,7 @@ function restartGame() {
 
     cactusScore = 0;
 
-cactusScoreDisplay.textContent = cactusScore;
+    cactusScoreDisplay.textContent = cactusScore;
 
     message.textContent = 'Press SPACE or tap to jump!';
 
@@ -351,11 +408,12 @@ cactusScoreDisplay.textContent = cactusScore;
 
     clearInterval(timerInterval);
     isPaused = false;
+    updateJumpButton();
 
-pauseBtn.disabled = false;
-pauseBtn.textContent = 'Pause';
+    pauseBtn.disabled = false;
+    pauseBtn.textContent = 'Pause';
 
-document.body.classList.remove('paused');
+    document.body.classList.remove('paused');
     startTimer();
 
     animationId = requestAnimationFrame(gameLoop);
@@ -364,14 +422,14 @@ document.body.classList.remove('paused');
 
 }
 
-restartBtn.addEventListener('click', function() {
+restartBtn.addEventListener('click', function () {
     buttonClickSound.currentTime = 0;
     buttonClickSound.play();
 
     restartGame();
 });
 
-pauseBtn.addEventListener('click', function() {
+pauseBtn.addEventListener('click', function () {
 
     buttonClickSound.currentTime = 0;
     buttonClickSound.play();
@@ -392,4 +450,5 @@ backgroundSound.play();
 
 startTimer();
 
-animationId = requestAnimationFrame(gameLoop); 
+animationId = requestAnimationFrame(gameLoop);
+updateJumpButton();
