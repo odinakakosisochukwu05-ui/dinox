@@ -12,12 +12,15 @@ const cactusScoreDisplay = document.getElementById('cactusScore');
 const pauseBtn = document.getElementById('pause');
 const jumpBtn = document.getElementById('jumpBtn');
 const speedSelect = document.getElementById('speedSelect');
+const homeScreen = document.getElementById('homeScreen');
+const gameScreen = document.getElementById('gameScreen');
+const startBtn = document.getElementById('startBtn');
 
 let score = 0;
 let cactusScore = 0;
 let highScore = Number(localStorage.getItem('dinoHighScore')) || 0;
 
-let gameRunning = true;
+let gameRunning = false;
 let isPaused = false;
 let pausedAt = 0;
 let obstacles = [];
@@ -375,6 +378,16 @@ function gameLoop(timestamp) {
 
 }
 
+// START GAME FROM HOMEPAGE
+
+function startGame() {
+
+    homeScreen.hidden = true;
+    gameScreen.hidden = false;
+
+    restartGame();
+
+}
 
 // RESTART GAME
 
@@ -442,13 +455,26 @@ pauseBtn.addEventListener('click', function () {
 
 });
 
+startBtn.addEventListener('click', function() {
+
+    buttonClickSound.currentTime = 0;
+    buttonClickSound.play();
+
+    startGame();
+
+});
+
 
 // START GAME
 
+// INITIAL GAME SETTINGS
+
 backgroundSound.volume = 0.1;
-backgroundSound.play();
 
-startTimer();
+gameRunning = false;
+isPaused = false;
 
-animationId = requestAnimationFrame(gameLoop);
+homeScreen.hidden = false;
+gameScreen.hidden = true;
+
 updateJumpButton();
