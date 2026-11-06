@@ -131,7 +131,7 @@ body.paused .ground {
     }
 }
 
-#jumpBtn{
+#jumpBtn {
     display: none;
     margin: 15px auto;
     padding: 15px 55px;
@@ -142,18 +142,18 @@ body.paused .ground {
     font-size: 18px;
     font-weight: bold;
     cursor: pointer;
-    box-shadow: 0 0 12px rgba(140,255,53,0.5);
+    box-shadow: 0 0 12px rgba(140, 255, 53, 0.5);
     touch-action: manipulation;
 }
 
-#jumpBtn:active{
+#jumpBtn:active {
     transform: scale(0.94);
 }
 
 /* ON MOBILE ONLY */
 
-@media(max-width:768px){
-    #jumpBtn{
+@media(max-width:768px) {
+    #jumpBtn {
         display: block;
     }
 }
@@ -283,4 +283,91 @@ body.paused .ground {
 #speedSelect option {
     background: #142b13;
     color: white;
+}
+
+/* HOME PAGE */
+
+.home-screen {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 15px;
+
+    background: rgba(5, 20, 10, 0.35);
+}
+
+.home-content {
+    width: 100%;
+    max-width: 500px;
+    padding: 40px 25px;
+
+    background: rgba(10, 25, 15, 0.88);
+
+    border: 2px solid #8cff35;
+    border-radius: 20px;
+
+    box-shadow: 0 0 30px rgba(140, 255, 53, 0.3);
+}
+
+.home-content h1 {
+    font-size: clamp(55px, 12vw, 85px);
+    letter-spacing: 8px;
+
+    color: #8cff35;
+
+    text-shadow: 0 0 20px #39ff14;
+}
+
+.home-content h1 span {
+    color: white;
+}
+
+.game-subtitle {
+    color: #baff80;
+    letter-spacing: 5px;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.home-description {
+    color: white;
+    line-height: 1.7;
+    margin: 30px 0;
+}
+
+.home-screen .speed-settings {
+    margin: 25px auto;
+}
+
+#startBtn {
+    width: 200px;
+    padding: 16px;
+
+    background: #8cff35;
+    color: #142b13;
+
+    border: none;
+    border-radius: 10px;
+
+    font-size: 20px;
+    font-weight: bold;
+
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#startBtn:hover {
+    transform: scale(1.07);
+    box-shadow: 0 0 20px #8cff35;
+}
+
+.home-instruction {
+    color: #c5e9b0;
+    font-size: 12px;
+    margin-top: 25px;
+}
+
+[hidden] {
+    display: none !important;
 }
