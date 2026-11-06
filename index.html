@@ -4,51 +4,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>DINOREX - Prehistoric Survival</title>
     <link rel="stylesheet" href="game.css">
 </head>
 
 <body>
-    <div class="game-container">
-        <h2>DINOREX</h2>
 
-        <!-- SPEED SETTINGS -->
+    <!-- HOME PAGE -->
 
-<div class="speed-settings">
+    <section id="homeScreen" class="home-screen">
 
-    <label for="speedSelect">GAME SPEED</label>
+        <div class="home-content">
 
-    <select id="speedSelect">
-        <option value="slow">SLOW</option>
-        <option value="normal" selected>NORMAL</option>
-        <option value="fast">FAST</option>
-    </select>
+            <h1>DINO<span>REX</span></h1>
 
-</div>
-        <div class="game-area">
-            <div id="dino">🦖</div>
-            <div class="ground"></div>
+            <p class="game-subtitle">PREHISTORIC SURVIVAL</p>
+
+            <p class="home-description">
+                Enter the prehistoric world!
+                Jump over obstacles and survive as long as you can.
+            </p>
+
+            <div class="speed-settings">
+
+                <label for="speedSelect">SELECT GAME SPEED</label>
+
+                <select id="speedSelect">
+                    <option value="slow">SLOW</option>
+                    <option value="normal" selected>NORMAL</option>
+                    <option value="fast">FAST</option>
+                </select>
+
+            </div>
+
+            <button id="startBtn">▶ PLAY</button>
+
+            <p class="home-instruction">
+                Use SPACE or the JUMP button to play
+            </p>
+
         </div>
 
-        <div class="score">
-            <p>Time: <span id="score">0</span>s</p>
-            <p>Cacti: <span id="cactusScore">0</span></p>
-            <p>High Score: <span id="highScore">0</span></p>
+    </section>
+
+
+    <!-- GAME SCREEN -->
+
+    <div id="gameScreen" hidden>
+
+        <div class="game-container">
+
+            <h2>DINOREX</h2>
+
+            <div class="game-area">
+
+                <div id="dino">🦖</div>
+
+                <div class="ground"></div>
+
+            </div>
+
+            <div class="score">
+
+                <p>Time: <span id="score">0</span>s</p>
+
+                <p>Cacti: <span id="cactusScore">0</span></p>
+
+                <p>High Score: <span id="highScore">0</span></p>
+
+            </div>
+
+            <div class="game-controls">
+
+                <p id="message">Press SPACE or tap JUMP!</p>
+
+                <button id="pause">Pause</button>
+
+                <button id="jumpBtn" hidden>JUMP</button>
+
+                <button id="restart" hidden>Play Again</button>
+
+            </div>
+
         </div>
-        <div class="game-controls">
-            <p id="message">press SPACE or tap to jump!</p>
-            <button id="pause">Pause</button>
-            <button id="jumpBtn">JUMP</button>
-            <button id="restart" hidden>Play Again</button>
-        </div>
+
     </div>
 
+
+    <!-- GAME SOUNDS -->
+
     <audio id="jumpSound" src="jumpsound.wav"></audio>
+
     <audio id="levelUpSound" src="levelupsound.wav"></audio>
+
     <audio id="gameOverSound" src="gameoversound.wav"></audio>
+
     <audio id="backgroundSound" src="backgroundsound.mp3" loop></audio>
+
     <audio id="buttonClickSound" src="buttonclicksound.wav"></audio>
+
+
     <script src="game.js"></script>
+
 </body>
 
 </html>
