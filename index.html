@@ -10,29 +10,44 @@
 
 <body>
     <div class="game-container">
-        <h2>DINOX</h2>
+        <h2>DINOREX</h2>
 
+        <!-- SPEED SETTINGS -->
+
+<div class="speed-settings">
+
+    <label for="speedSelect">GAME SPEED</label>
+
+    <select id="speedSelect">
+        <option value="slow">SLOW</option>
+        <option value="normal" selected>NORMAL</option>
+        <option value="fast">FAST</option>
+    </select>
+
+</div>
         <div class="game-area">
             <div id="dino">🦖</div>
             <div class="ground"></div>
         </div>
 
-     <div class="score">
-    <p>Time: <span id="score">0</span>s</p>
-     <p>Cacti: <span id="cactusScore">0</span></p>
-    <p>High Score: <span id="highScore">0</span></p>
-</div>
-        <p id="message">press SPACE or tap to jump!</p>
-        <button id="pause">Pause</button>
-        <button id="jumpBtn">JUMP</button>
-        <button id="restart" hidden>Play Again</button>
+        <div class="score">
+            <p>Time: <span id="score">0</span>s</p>
+            <p>Cacti: <span id="cactusScore">0</span></p>
+            <p>High Score: <span id="highScore">0</span></p>
+        </div>
+        <div class="game-controls">
+            <p id="message">press SPACE or tap to jump!</p>
+            <button id="pause">Pause</button>
+            <button id="jumpBtn">JUMP</button>
+            <button id="restart" hidden>Play Again</button>
+        </div>
     </div>
 
-<audio id="jumpSound" src="jumpsound.wav"></audio>
-<audio id="levelUpSound" src="levelupsound.wav"></audio>
-<audio id="gameOverSound" src="gameoversound.wav"></audio>
-<audio id="backgroundSound" src="backgroundsound.mp3" loop></audio>
-<audio id="buttonClickSound" src="buttonclicksound.wav"></audio>
+    <audio id="jumpSound" src="jumpsound.wav"></audio>
+    <audio id="levelUpSound" src="levelupsound.wav"></audio>
+    <audio id="gameOverSound" src="gameoversound.wav"></audio>
+    <audio id="backgroundSound" src="backgroundsound.mp3" loop></audio>
+    <audio id="buttonClickSound" src="buttonclicksound.wav"></audio>
     <script src="game.js"></script>
 </body>
 
