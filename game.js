@@ -15,23 +15,34 @@ const speedSelect = document.getElementById('speedSelect');
 const homeScreen = document.getElementById('homeScreen');
 const gameScreen = document.getElementById('gameScreen');
 const startBtn = document.getElementById('startBtn');
+const homeBtn = document.getElementById('homeBtn');
 
 let score = 0;
 let cactusScore = 0;
-let highScore = Number(localStorage.getItem('dinoHighScore')) || 0;
-
+let highScore = Number(
+    localStorage.getItem('dinoHighScore_' + speedSelect.value)
+) || 0;
 let gameRunning = false;
 let isPaused = false;
 let pausedAt = 0;
 let obstacles = [];
 let lastSpawn = 0;
+let nextSpawnTime = 0;
 let animationId;
-
 let startTime = 0;
 let timerInterval;
 let cactusSpeed = 5;
 let initialSpeed = 5;
 let maximumSpeed = 20;
+
+// DOUBLE JUMP VARIABLES
+
+let dinoY = 35;
+let dinoVelocity = 0;
+let gravity = 0.55;
+let jumpPower = 13;
+let jumpCount = 0;
+const maximumJumps = 2;
 
 highScoreDisplay.textContent = highScore;;
 
@@ -41,47 +52,80 @@ const speedModes = {
 
     slow: {
         initial: 3,
-        maximum: 20
+        maximum: 30
     },
 
     normal: {
         initial: 7,
-        maximum: 30
+        maximum: 50
     },
 
     fast: {
-        initial: 10,
-        maximum: 50
+        initial: 15,
+        maximum: 100
     }
 
 };
 
 // CHANGE GAME SPEED
 
-speedSelect.addEventListener('change', function() {
+speedSelect.addEventListener('change', function () {
 
     const selectedSpeed = speedSelect.value;
 
+    // Change game speed
     initialSpeed = speedModes[selectedSpeed].initial;
     maximumSpeed = speedModes[selectedSpeed].maximum;
 
     cactusSpeed = initialSpeed;
 
+    // Load high score for selected speed
+    highScore = Number(
+        localStorage.getItem('dinoHighScore_' + selectedSpeed)
+    ) || 0;
+
+    highScoreDisplay.textContent = highScore;
+
 });
 
-// DINO JUMP
+// DINO DOUBLE JUMP
 
 function jump() {
-    if (!gameRunning || isPaused || dino.classList.contains('jump')) {
+
+    if (!gameRunning || isPaused || jumpCount >= maximumJumps) {
         return;
     }
+
+    jumpCount++;
+
+    // Give the dinosaur upward force
+    dinoVelocity = jumpPower;
+
     jumpSound.currentTime = 0;
     jumpSound.play();
-    dino.classList.add('jump');
 
-    setTimeout(function () {
-        dino.classList.remove('jump');
-    }, 600);
+}
+
+// DINO MOVEMENT PHYSICS
+
+function updateDino() {
+
+    dinoY += dinoVelocity;
+
+    dinoVelocity -= gravity;
+
+    // Keep dinosaur above the ground
+    if (dinoY <= 35) {
+
+        dinoY = 35;
+
+        dinoVelocity = 0;
+
+        jumpCount = 0;
+
+    }
+
+    dino.style.bottom = dinoY + 'px';
 
 }
 
@@ -133,8 +177,7 @@ jumpBtn.addEventListener('pointerdown', function (event) {
 
 // CREATE CACTUS
 
-function createObstacle() {
-
+function createObstacle(offset = 0) {
     const cactus = document.createElement('div');
 
     cactus.classList.add('obstacle');
@@ -144,11 +187,37 @@ function createObstacle() {
 
     obstacles.push({
         element: cactus,
-        x: gameArea.clientWidth
+        x: gameArea.clientWidth + offset,
+        scored: false
     });
 
 }
 
+// CREATE RANDOM OBSTACLES
+function spawnObstacles(timestamp) {
+
+    if (timestamp >= nextSpawnTime) {
+
+        let cactusCount = 1;
+
+        let elapsedTime = (Date.now() - startTime) / 1000;
+
+        // After 40 seconds, randomly create 1, 2 or 3 cacti
+        if (elapsedTime >= 20) {
+            cactusCount = Math.floor(Math.random() * 3) + 1;
+        }
+
+        // Create the cacti
+        for (let i = 0; i < cactusCount; i++) {
+            createObstacle(i * 45);
+        }
+
+        // Random distance between obstacle groups
+        let randomDelay = Math.floor(Math.random() * 1000) + 900;
+ 
+        nextSpawnTime = timestamp + randomDelay;
+    }
+}
 
 // GAME OVER
 
@@ -211,7 +280,11 @@ function updateHighScore() {
 
         highScoreDisplay.textContent = highScore;
 
-        localStorage.setItem('dinoHighScore', highScore);
+        // Save high score for current game speed
+        localStorage.setItem(
+            'dinoHighScore_' + speedSelect.value,
+            highScore
+        );
 
     }
 
@@ -305,8 +378,6 @@ function resumeGame() {
 
     startTimer(false);
 
-    backgroundSound.play();
-
     document.body.classList.remove('paused');
 
     pauseBtn.textContent = 'Pause';
@@ -324,11 +395,13 @@ function gameLoop(timestamp) {
         return;
     }
 
-    // CREATE OBSTACLES
-    if (timestamp - lastSpawn > 1000) {
-        createObstacle();
-        lastSpawn = timestamp;
-    }
+    // CREATE RANDOM OBSTACLES
+
+    spawnObstacles(timestamp);
+
+    // UPDATE DINOSAUR PHYSICS
+
+    updateDino();
 
     // MOVE OBSTACLES
     obstacles.forEach(function (obstacle) {
@@ -390,7 +463,8 @@ function startGame() {
 }
 
 // RESTART GAME
-
+backgroundSound.pause();
+backgroundSound.currentTime = 0;
 function restartGame() {
 
     cancelAnimationFrame(animationId);
@@ -413,9 +487,16 @@ function restartGame() {
 
     restartBtn.hidden = true;
 
-    dino.classList.remove('jump');
+    // RESET DINOSAUR POSITION
 
-    lastSpawn = 0;
+    dinoY = 35;
+    dinoVelocity = 0;
+    jumpCount = 0;
+
+    dino.style.bottom = '35px';
+
+ lastSpawn = 0;
+nextSpawnTime = 0;
 
     gameRunning = true;
 
@@ -431,9 +512,11 @@ function restartGame() {
 
     animationId = requestAnimationFrame(gameLoop);
     backgroundSound.currentTime = 0;
-    backgroundSound.play();
+    // backgroundSound.play();
 
 }
+
+// EVENT LISTENERS
 
 restartBtn.addEventListener('click', function () {
     buttonClickSound.currentTime = 0;
@@ -455,7 +538,7 @@ pauseBtn.addEventListener('click', function () {
 
 });
 
-startBtn.addEventListener('click', function() {
+startBtn.addEventListener('click', function () {
 
     buttonClickSound.currentTime = 0;
     buttonClickSound.play();
@@ -464,12 +547,81 @@ startBtn.addEventListener('click', function() {
 
 });
 
+homeBtn.addEventListener('click', function() {
+
+    buttonClickSound.currentTime = 0;
+    buttonClickSound.play();
+
+    returnHome();
+
+});
+
+// HOME PAGE BACKGROUND MUSIC
+
+function playHomeMusic() {
+    backgroundSound.volume = 0.1;
+    backgroundSound.play().catch(function() {
+        console.log('Waiting for user interaction to play music.');
+    });
+}
 
 // START GAME
 
+function startGame() {
+
+    // Stop home page music
+    backgroundSound.pause();
+    backgroundSound.currentTime = 0;
+
+    homeScreen.hidden = true;
+    gameScreen.hidden = false;
+
+    restartGame();
+
+}
+
+// RETURN TO HOME PAGE
+
+function returnHome() {
+
+    // Stop the game
+    gameRunning = false;
+    isPaused = false;
+
+    cancelAnimationFrame(animationId);
+    clearInterval(timerInterval);
+
+    // Remove all obstacles
+    obstacles.forEach(function(obstacle) {
+        obstacle.element.remove();
+    });
+
+    obstacles = [];
+
+    // Reset dinosaur
+    dinoY = 35;
+    dinoVelocity = 0;
+    jumpCount = 0;
+    dino.style.bottom = '35px';
+
+    // Reset controls
+    pauseBtn.textContent = 'Pause';
+    pauseBtn.disabled = false;
+    restartBtn.hidden = true;
+
+    document.body.classList.remove('paused');
+
+    updateJumpButton();
+
+    // Show homepage
+    gameScreen.hidden = true;
+    homeScreen.hidden = false;
+    playHomeMusic();
+}
+
 // INITIAL GAME SETTINGS
 
-backgroundSound.volume = 0.1;
+backgroundSound.volume = 1;
 
 gameRunning = false;
 isPaused = false;
@@ -478,3 +630,6 @@ homeScreen.hidden = false;
 gameScreen.hidden = true;
 
 updateJumpButton();
+
+// Play music on homepage
+playHomeMusic();
