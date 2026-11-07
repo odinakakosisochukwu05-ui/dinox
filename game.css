@@ -721,3 +721,19 @@ MOVING PREHISTORIC CLOUDS
         left: 110%;
     }
 }
+
+/* MOBILE HOMEPAGE BACKGROUND FIX */
+
+@media screen and (max-width: 768px) {
+
+    .home-screen {
+        width: 100%;
+        min-height: 100vh;
+
+        background-image: url("gamebg-img.png") !important;
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+    }
+
+}
